@@ -1,5 +1,8 @@
 a = [4, 5, 6, 10, 1, 3]
+# print(a[-1])
 
+
+import unittest
 
 def merge_sort(a):
 	if len(a) < 2:
@@ -28,12 +31,14 @@ def merge(left, right):
 		j += 1
 	return res
 
-print(merge_sort(a))
 
 class Test_merge(unittest.TestCase):
 	
 	def test_merge(self):
 		a = [4, 5, 6, 10, 1, 3]
-		self.assertEqual(merge_sort(a))
+		h = [4, 5, 6, 10, 1, 3]
+		h.sort()
+		self.assertEqual(merge_sort(a),h)
 
 
+unittest.main()
