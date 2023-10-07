@@ -45,19 +45,63 @@ def Delete_student(name,surname):
 
 
 def Delete_course(ids):
-    print(ids[0])
-    curs.execute("DELETE FROM Student_courses WHERE student_id = ? ",(ids[0]))
+    for i in ids:
+            curs.execute("DELETE FROM Student_courses WHERE student_id = ? ",(i))
 
 
 class students_and_courses(unittest.TestCase):
-
     def test_App_courses(self):
         a = ("C#",now.strftime('13.07.21'), now.strftime('16.08.21'))
-        self.assertEqual(App_courses(a))
-        prin("Hello")
+        App_courses(a[0],a[1],a[2])
+        h = curs.execute("SELECT name,time_start,time_end FROM Courses WHERE name = ? AND time_start = ? AND time_end = ? ",a)
+        self.assertEqual(a,curs.fetchall()[0])
+
+    def test_App_Srudent(self):
+    
+        a = ( 'Kate', 'Brooks', 34, 'Spb')
+        App_Srudent(a[0],a[1],a[2],a[3],)
+        h = curs.execute("SELECT name,surname,age,city FROM Students WHERE name = ? AND surname = ? AND age = ? AND city = ?",a)
+        self.assertEqual(a,curs.fetchall()[0])
+
+    def test_delet_student(self):
+        a = ( 'Kate', 'Brooks', 34, 'Spb')
+        Delete_student(a[0],a[1],)
+        self.assertTrue(examination_delet_student(a))
 
 
+    def test_delet_student_and_courses(self):
+        a = ( 'Max', 'Brooks', 24, 'Spb')
+        curs.execute("SELECT id FROM Students WHERE name = ? AND surname = ? AND age = ? AND city = ?",a)
+        ids = curs.fetchall()
+        Delete_student(a[0],a[1],)
+        self.assertTrue(examination_delet_student_courses(a,ids))
 
+def examination_delet_student(student):
+    curs.execute("SELECT * FROM Students WHERE name = ? AND surname = ? AND age = ? AND city = ?",student)
+    h = curs.fetchall()
+    if h == []:
+        return(True)
+    else:
+        return(False)
+
+def examination_delet_student_courses(student,ids):
+    curs.execute("SELECT * FROM Students WHERE name = ? AND surname = ? AND age = ? AND city = ?",student)
+    h = curs.fetchall()
+    curs.execute("SELECT * FROM Student_courses WHERE student_id == ?",ids[0])
+    g = curs.fetchall()
+    if h == [] and g == []:
+        return(True)
+    else:
+        return(False)
+
+
+    
+
+# App_Srudent('Kate', 'Brooks', 34, 'Spb')
+# App_Student_courses('python','Max', 'Brooks')
+
+
+# Delete_student('Kate', 'Brooks')
 unittest.main()
 conn.commit()
 conn.close()
